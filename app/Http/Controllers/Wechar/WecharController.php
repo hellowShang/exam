@@ -44,7 +44,7 @@ class WecharController extends Controller
         $token = Redis::get($key);
         if ($token) {
         } else{
-            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".env('WECHAR_APPID')."&secret=".env('WECHAR_SECRET');
+            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".env('APPID')."&secret=".env('SECRET');
             $access_koken = file_get_contents($url);
 
             $arr = json_decode($access_koken,true);
