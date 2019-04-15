@@ -106,4 +106,64 @@ class WecharController extends Controller
             return $message;
         }
     }
+
+    // 自定义菜单
+    public function menu()
+    {
+        $url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$this->getAccessToken();
+
+        $data = [
+            'button' => [
+                // 第一个一级菜单
+                [
+                    "name" => "生活",
+                    "sub_button"=> [
+                        [
+                            "type" => "view",
+                            "name" => "搜索",
+                            "url" => "http://www.soso.com/"
+                        ],
+                        [
+                            "type" => "pic_photo_or_album",
+                            "name" => "拍照或者相册发图",
+                            "key"  => "key_menu_001",
+                            "sub_button" =>[ ]
+                        ],
+                        [
+                            "type" => "scancode_waitmsg",
+                            "name" => "扫码带提示",
+                            "key" => "key_menu_002",
+                            "sub_button" => [ ]
+                        ]
+                    ],
+                ],
+
+                [
+                    "type" => "view",
+                    "name" => "百度",
+                    "url" => "http://www.baidu.com"
+                ],
+
+                [
+                    "type" => "click",
+                    "name" => "啦啦啦",
+                    "key" => "key_menu_003"
+                ],
+            ]
+        ];
+
+        // 实例化第三方类库
+        $client = new Client();
+        // 数组转化成json字符串
+        $data = json_encode($data,JSON_UNESCAPED_UNICODE);
+        $response = $client->request('POST',$url,['body' => $data]);
+
+        $arr = json_decode($response->getBody(),true);
+
+        if($arr['errcode'] > 0){
+            echo '创建菜单失败';
+        }else{
+            echo '创建菜单成功';
+        }
+    }
 }
