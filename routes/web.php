@@ -16,9 +16,9 @@ Route::get('/', function () {
 });
 
 // 首次接入
-Route::get('/weixin/valid','WecharController@first');
+Route::get('/weixin/valid','Wechar\WecharController@first');
 
 // 扫码
-Route::post('/weixin/valid','WecharController@sweep');
+Route::post('/weixin/valid','Wechar\WecharController@sweep');
 
 // 获取access_token
