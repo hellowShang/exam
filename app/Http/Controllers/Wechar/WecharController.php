@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Wechar\WecharModel;
 use Illuminate\Support\Facades\Redis;
-use Guzzle\Client;
+use GuzzleHttp\Client;
+
 class WecharController extends Controller
 {
     // 首次接入
