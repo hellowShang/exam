@@ -42,10 +42,16 @@ class WecharController extends Controller
         $token = Redis::get($key);
         if ($token) {
         } else{
-            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=env('WECHAR_APPID')&secret=env('WECHAR_SECRET')";
-            $token = file_get_contents($url);
-            Redis::set($key,$token);
+            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".env('WECHAR_APPID')."&secret=".env('WECHAR_SECRET');
+            $access_koken = file_get_contents($url);
+
+            $arr = json_decode($access_koken,true);
+
+            Redis::set($key,$arr['access_token']);
+
             Redis::expire($key,3600);
+
+            $token = $arr['access_token'];
          }
          return $token;
     }
@@ -59,26 +65,26 @@ class WecharController extends Controller
     }
 
     // 用户信息入库
-    public function addUserInfo($xml,$openid){
-        if($xml->MsgType == 'event' && $xml->Event == 'subscribe'){
-            $arr = WecharModel::where('openid',$openid)->first();
-            if($arr){
-
-            }else{
-                $info = [
-                    'subscribe' => $userInfo['subscribe'],
-                    'openid' => $userInfo['openid'],
-                    'nickname' => $userInfo['nickname'],
-                    'sex' => $userInfo['sex'],
-                    'city' => $userInfo['city'],
-                    'province' => $userInfo['province'],
-                    'country' => $userInfo['country'],
-                    'headimgurl' => $userInfo['headimgurl'],
-                    'subscribe_time' => $userInfo['subscribe_time'],
-                ];
-
-                $message = "";
-            }
-        }
-    }
+//    public function addUserInfo($xml,$openid){
+//        if($xml->MsgType == 'event' && $xml->Event == 'subscribe'){
+//            $arr = WecharModel::where('openid',$openid)->first();
+//            if($arr){
+//
+//            }else{
+//                $info = [
+//                    'subscribe' => $userInfo['subscribe'],
+//                    'openid' => $userInfo['openid'],
+//                    'nickname' => $userInfo['nickname'],
+//                    'sex' => $userInfo['sex'],
+//                    'city' => $userInfo['city'],
+//                    'province' => $userInfo['province'],
+//                    'country' => $userInfo['country'],
+//                    'headimgurl' => $userInfo['headimgurl'],
+//                    'subscribe_time' => $userInfo['subscribe_time'],
+//                ];
+//
+//                $message = "";
+//            }
+//        }
+//    }
 }

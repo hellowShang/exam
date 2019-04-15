@@ -22,4 +22,4 @@ Route::get('/weixin/valid','Wechar\WecharController@first');
 Route::post('/weixin/valid','Wechar\WecharController@sweep');
 
 // 获取access_token
-
+Route::get('/weixin/access_token','Wechar\WecharController@getAccessToken');
