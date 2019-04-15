@@ -19,6 +19,6 @@ Route::get('/', function () {
 Route::get('/weixin/valid','WecharController@first');
 
 // 扫码
-Route::get('/weixin/valid','WecharController@sweep');
+Route::post('/weixin/valid','WecharController@sweep');
 
 // 获取access_token
