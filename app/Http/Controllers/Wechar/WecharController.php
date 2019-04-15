@@ -123,7 +123,7 @@ class WecharController extends Controller
                 [
                     "type" => "click",
                     "name" => "啦啦啦",
-                    "key" => "key_menu_003"
+                    "key" => "key_menu_001"
                 ],
             ]
         ];

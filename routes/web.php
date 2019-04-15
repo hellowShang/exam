@@ -23,3 +23,6 @@ Route::post('/weixin/valid','Wechar\WecharController@sweep');
 
 // 获取access_token
 Route::get('/weixin/access_token','Wechar\WecharController@getAccessToken');
+
+// 自定义菜单
+Route::get('/menu','Wechar\WecharController@menu');
