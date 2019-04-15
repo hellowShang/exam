@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Wechar\WecharModel;
 use Illuminate\Support\Facades\Redis;
-
+use Guzzle\Client;
 class WecharController extends Controller
 {
     // 首次接入
@@ -114,30 +114,6 @@ class WecharController extends Controller
 
         $data = [
             'button' => [
-                // 第一个一级菜单
-                [
-                    "name" => "生活",
-                    "sub_button"=> [
-                        [
-                            "type" => "view",
-                            "name" => "搜索",
-                            "url" => "http://www.soso.com/"
-                        ],
-                        [
-                            "type" => "pic_photo_or_album",
-                            "name" => "拍照或者相册发图",
-                            "key"  => "key_menu_001",
-                            "sub_button" =>[ ]
-                        ],
-                        [
-                            "type" => "scancode_waitmsg",
-                            "name" => "扫码带提示",
-                            "key" => "key_menu_002",
-                            "sub_button" => [ ]
-                        ]
-                    ],
-                ],
-
                 [
                     "type" => "view",
                     "name" => "百度",
