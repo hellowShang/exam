@@ -27,11 +27,13 @@ class WecharController extends Controller
         $xml = simplexml_load_string($data);
         $openid = $xml-> FromUserName;
         $userInfo = $this-> getUserInfo($openid);
-        file_put_contents('logs/wechar.log',$userInfo,FILE_APPEND);
+
+        // 用户信息入库
+        $message = $this-> addUserInfo($xml,$openid,$userInfo);
+        echo $message;
 
 
-        $this-> addUserInfo($xml,$openid);
-
+        echo 'success';
 
     }
 
@@ -60,31 +62,48 @@ class WecharController extends Controller
     public function getUserInfo($openid){
         $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$this->getAccessToken()."&openid=".$openid."&lang=zh_CN";
         $data = file_get_contents($url);
+
         $arr = json_decode($data,true);
+
         return $arr;
     }
 
     // 用户信息入库
-//    public function addUserInfo($xml,$openid){
-//        if($xml->MsgType == 'event' && $xml->Event == 'subscribe'){
-//            $arr = WecharModel::where('openid',$openid)->first();
-//            if($arr){
-//
-//            }else{
-//                $info = [
-//                    'subscribe' => $userInfo['subscribe'],
-//                    'openid' => $userInfo['openid'],
-//                    'nickname' => $userInfo['nickname'],
-//                    'sex' => $userInfo['sex'],
-//                    'city' => $userInfo['city'],
-//                    'province' => $userInfo['province'],
-//                    'country' => $userInfo['country'],
-//                    'headimgurl' => $userInfo['headimgurl'],
-//                    'subscribe_time' => $userInfo['subscribe_time'],
-//                ];
-//
-//                $message = "";
-//            }
-//        }
-//    }
+    public function addUserInfo($xml,$openid,$userInfo){
+        if($xml->MsgType == 'event' && $xml->Event == 'subscribe'){
+            $arr = WecharModel::where('openid',$openid)->first();
+            if($arr){
+                $message = "<xml>
+                                <ToUserName><![CDATA[$xml->FromUserName]]></ToUserName>
+                                <FromUserName><![CDATA[$xml->ToUserName]]></FromUserName>
+                                <CreateTime>time()</CreateTime>
+                                <MsgType><![CDATA[text]]></MsgType>
+                                <Content><![CDATA[欢迎回来" . $userInfo['nickname'] . "]]></Content>
+                            </xml>";
+            }else{
+                $info = [
+                    'subscribe' => $userInfo['subscribe'],
+                    'openid' => $userInfo['openid'],
+                    'nickname' => $userInfo['nickname'],
+                    'sex' => $userInfo['sex'],
+                    'city' => $userInfo['city'],
+                    'province' => $userInfo['province'],
+                    'country' => $userInfo['country'],
+                    'headimgurl' => $userInfo['headimgurl'],
+                    'subscribe_time' => $userInfo['subscribe_time'],
+                ];
+                $res = WecharModel::insert($info);
+                if($res){
+                    $message = "<xml>
+                                <ToUserName><![CDATA[$xml->FromUserName]]></ToUserName>
+                                <FromUserName><![CDATA[$xml->ToUserName]]></FromUserName>
+                                <CreateTime>time()</CreateTime>
+                                <MsgType><![CDATA[text]]></MsgType>
+                                <Content><![CDATA[你好" . $userInfo['nickname'] . "，欢迎关注]]></Content>
+                            </xml>";
+                }
+            }
+            return $message;
+        }
+    }
 }
